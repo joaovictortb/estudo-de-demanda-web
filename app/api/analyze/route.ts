@@ -152,6 +152,10 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("❌ Erro geral:", error);
-    return new Response("Erro interno: " + error.message, { status: 500 });
+    return new Response(
+      "Erro interno: " +
+        (error instanceof Error ? error.message : String(error)),
+      { status: 500 }
+    );
   }
 }
