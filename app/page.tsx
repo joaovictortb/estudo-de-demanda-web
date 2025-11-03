@@ -19,11 +19,35 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed">
-              Descubra oportunidades de mercado, dores do público e
-              palavras-chave estratégicas com análises completas e insights
-              acionáveis gerados por IA
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto text-pretty leading-relaxed mb-8">
+              Análise completa de nichos de mercado com inteligência artificial. 
+              Descubra oportunidades, dores do público, palavras-chave, competidores, 
+              tendências e estratégias de monetização com dados detalhados e acionáveis.
             </p>
+
+            {/* Seções da análise */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8 max-w-5xl mx-auto text-xs">
+              <div className="p-3 bg-card/50 rounded-lg border border-border/50 text-center">
+                <div className="font-semibold text-primary mb-1">Visão Geral</div>
+                <div className="text-muted-foreground text-[10px]">Mercado & Personas</div>
+              </div>
+              <div className="p-3 bg-card/50 rounded-lg border border-border/50 text-center">
+                <div className="font-semibold text-primary mb-1">Pesquisas</div>
+                <div className="text-muted-foreground text-[10px]">15-20 buscas reais</div>
+              </div>
+              <div className="p-3 bg-card/50 rounded-lg border border-border/50 text-center">
+                <div className="font-semibold text-primary mb-1">Dores/Desejos</div>
+                <div className="text-muted-foreground text-[10px]">7-10 de cada</div>
+              </div>
+              <div className="p-3 bg-card/50 rounded-lg border border-border/50 text-center">
+                <div className="font-semibold text-primary mb-1">Competição</div>
+                <div className="text-muted-foreground text-[10px]">Análise completa</div>
+              </div>
+              <div className="p-3 bg-card/50 rounded-lg border border-border/50 text-center">
+                <div className="font-semibold text-primary mb-1">Oportunidades</div>
+                <div className="text-muted-foreground text-[10px]">Estratégias & Ideias</div>
+              </div>
+            </div>
 
             {/* Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 max-w-4xl mx-auto">
@@ -44,9 +68,9 @@ export default function Home() {
                   </svg>
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-sm">Análise Completa</div>
+                  <div className="font-semibold text-sm">10 Seções Detalhadas</div>
                   <div className="text-xs text-muted-foreground">
-                    Dores, oportunidades e tendências
+                    Visão geral, pesquisas, dores, palavras-chave, competição, canais, tendências, oportunidades, estatísticas e recomendações
                   </div>
                 </div>
               </div>
@@ -93,10 +117,10 @@ export default function Home() {
                 </div>
                 <div className="text-left">
                   <div className="font-semibold text-sm">
-                    Insights Estratégicos
+                    Dados Completos
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Palavras-chave e oportunidades
+                    20-25 palavras-chave, 5 oportunidades de negócio, 10 títulos virais, estatísticas e métricas
                   </div>
                 </div>
               </div>
