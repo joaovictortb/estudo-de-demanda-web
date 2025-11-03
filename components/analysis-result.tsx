@@ -44,7 +44,7 @@ export function AnalysisResult({ content, isLoading }: AnalysisResultProps) {
 
       {/* Conteúdo principal */}
       <Card className="p-6 md:p-8">
-        <div className="prose prose-invert max-w-none">
+        <div className="prose prose-invert max-w-none prose-headings:mt-8 prose-headings:mb-4 prose-p:mb-4 prose-ul:mb-4 prose-ol:mb-4">
           <ReactMarkdown
             components={{
               h1: ({ children }) => (
@@ -98,28 +98,28 @@ export function AnalysisResult({ content, isLoading }: AnalysisResultProps) {
                 </h3>
               ),
               p: ({ children }) => (
-                <p className="text-base leading-relaxed mb-4 text-muted-foreground">
+                <p className="text-base leading-relaxed mb-4 text-muted-foreground break-words">
                   {children}
                 </p>
               ),
               ul: ({ children }) => (
-                <div className="bg-muted/30 rounded-lg p-4 mb-4">
-                  <ul className="space-y-3 text-muted-foreground">
+                <div className="bg-muted/30 rounded-lg p-4 mb-4 overflow-hidden">
+                  <ul className="space-y-3 text-muted-foreground list-none pl-0">
                     {children}
                   </ul>
                 </div>
               ),
               ol: ({ children }) => (
-                <div className="bg-muted/30 rounded-lg p-4 mb-4">
-                  <ol className="space-y-3 text-muted-foreground">
+                <div className="bg-muted/30 rounded-lg p-4 mb-4 overflow-hidden">
+                  <ol className="space-y-3 text-muted-foreground list-decimal pl-6">
                     {children}
                   </ol>
                 </div>
               ),
               li: ({ children }) => (
-                <li className="text-base leading-relaxed flex items-start gap-2">
+                <li className="text-base leading-relaxed flex items-start gap-2 break-words">
                   <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                  <span>{children}</span>
+                  <span className="flex-1">{children}</span>
                 </li>
               ),
               strong: ({ children }) => (

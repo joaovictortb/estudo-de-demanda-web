@@ -1,4 +1,4 @@
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const maxDuration = 30; // Aumentar timeout para 30 segundos
 
 const SYSTEM_PROMPT = `Você é um assistente especialista em pesquisa de mercado e comportamento do consumidor.

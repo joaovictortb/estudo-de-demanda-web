@@ -117,16 +117,16 @@ export function NicheAnalyzer() {
           </div>
 
           {/* Input e botão */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <div className="flex flex-col sm:flex-row gap-3 w-full">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none z-10" />
               <Input
                 type="text"
                 placeholder="Ex: terapeutas holísticos, marketing digital, e-commerce..."
                 value={niche}
                 onChange={(e) => setNiche(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAnalyze()}
-                className="pl-10 h-12 text-base border-2 focus:border-primary transition-colors"
+                className="pl-10 h-12 text-base border-2 focus:border-primary transition-colors w-full"
                 disabled={isLoading}
               />
             </div>
@@ -134,7 +134,7 @@ export function NicheAnalyzer() {
               onClick={handleAnalyze}
               disabled={isLoading || !niche.trim()}
               size="lg"
-              className="h-12 px-8 gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-200"
+              className="h-12 px-8 gap-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg transition-all duration-200 flex-shrink-0"
             >
               {isLoading ? (
                 <>

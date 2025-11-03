@@ -1,16 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Removido ignoreBuildErrors para melhor qualidade de código
-    // ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
     unoptimized: true,
   },
-  // Configuração para Edge Runtime
-  experimental: {
-    runtime: "edge",
-  },
+  // Remover configuração experimental de Edge Runtime
+  // Isso pode causar problemas com CSS/Tailwind na Vercel
 };
 
 export default nextConfig;
