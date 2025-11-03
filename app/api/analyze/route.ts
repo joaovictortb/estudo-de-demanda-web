@@ -1,6 +1,5 @@
-import { generateText } from "ai";
-
 export const runtime = "edge";
+export const maxDuration = 30; // Aumentar timeout para 30 segundos
 
 const SYSTEM_PROMPT = `Você é um assistente especialista em pesquisa de mercado e comportamento do consumidor.
 
@@ -85,7 +84,7 @@ export async function POST(req: Request) {
       return new Response("API key não configurada", { status: 500 });
     }
 
-    console.log("📡 Fazendo requisição para OpenAI...");
+    console.log("📡 Fazendo requisição para OpenAI com streaming...");
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -101,6 +100,7 @@ export async function POST(req: Request) {
         ],
         max_tokens: 2000,
         temperature: 0.7,
+        stream: true, // Habilitar streaming real
       }),
     });
 
@@ -112,30 +112,49 @@ export async function POST(req: Request) {
       return new Response("Erro OpenAI: " + errorText, { status: 500 });
     }
 
-    const data = await response.json();
-    const text = data.choices[0].message.content;
-
-    console.log("✅ OpenAI funcionou! Tamanho:", text.length);
-
-    // Simular streaming
+    // Streaming real da OpenAI
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          console.log("📡 Iniciando stream...");
+          console.log("📡 Iniciando stream real...");
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
 
-          // Enviar texto em chunks
-          const chunkSize = 50;
-          for (let i = 0; i < text.length; i += chunkSize) {
-            const chunk = text.slice(i, i + chunkSize);
-            const data = `data: ${JSON.stringify({ content: chunk })}\n\n`;
-            controller.enqueue(encoder.encode(data));
-            await new Promise((resolve) => setTimeout(resolve, 50));
+          if (!reader) {
+            throw new Error("Stream não disponível");
           }
 
-          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-          controller.close();
-          console.log("✅ Stream finalizado!");
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split("\n");
+
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const data = line.slice(6);
+                if (data === "[DONE]") {
+                  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                  controller.close();
+                  console.log("✅ Stream finalizado!");
+                  return;
+                }
+
+                try {
+                  const parsed = JSON.parse(data);
+                  const content = parsed.choices?.[0]?.delta?.content;
+                  if (content) {
+                    const data = `data: ${JSON.stringify({ content })}\n\n`;
+                    controller.enqueue(encoder.encode(data));
+                  }
+                } catch (e) {
+                  // Ignora erros de parsing
+                }
+              }
+            }
+          }
         } catch (error) {
           console.error("❌ Erro no stream:", error);
           controller.error(error);
