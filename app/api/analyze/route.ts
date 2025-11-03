@@ -116,6 +116,19 @@ export async function POST(req: Request) {
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
+        let isClosed = false;
+        
+        const closeController = () => {
+          if (!isClosed) {
+            isClosed = true;
+            try {
+              controller.close();
+            } catch (e) {
+              // Controller já estava fechado
+            }
+          }
+        };
+
         try {
           console.log("📡 Iniciando stream real...");
           const reader = response.body?.getReader();
@@ -127,25 +140,37 @@ export async function POST(req: Request) {
 
           while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            
+            if (done) {
+              if (!isClosed) {
+                controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                closeController();
+                console.log("✅ Stream finalizado!");
+              }
+              break;
+            }
 
             const chunk = decoder.decode(value);
             const lines = chunk.split("\n");
 
             for (const line of lines) {
+              if (isClosed) break;
+              
               if (line.startsWith("data: ")) {
                 const data = line.slice(6);
                 if (data === "[DONE]") {
-                  controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-                  controller.close();
-                  console.log("✅ Stream finalizado!");
+                  if (!isClosed) {
+                    controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                    closeController();
+                    console.log("✅ Stream finalizado!");
+                  }
                   return;
                 }
 
                 try {
                   const parsed = JSON.parse(data);
                   const content = parsed.choices?.[0]?.delta?.content;
-                  if (content) {
+                  if (content && !isClosed) {
                     const data = `data: ${JSON.stringify({ content })}\n\n`;
                     controller.enqueue(encoder.encode(data));
                   }
@@ -157,7 +182,13 @@ export async function POST(req: Request) {
           }
         } catch (error) {
           console.error("❌ Erro no stream:", error);
-          controller.error(error);
+          if (!isClosed) {
+            try {
+              controller.error(error);
+            } catch (e) {
+              // Controller já estava fechado
+            }
+          }
         }
       },
     });
